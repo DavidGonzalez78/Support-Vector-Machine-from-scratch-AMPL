@@ -1,0 +1,29 @@
+
+
+reset;
+option solver cplex;
+option cplex_options 'timing=1';
+option cplex_options 'baropt timing=1';
+printf "\nCargando modelo y datos...\n";
+model svm_dual.mod;
+data data_dual_diabetes.dat;
+printf "Modelo cargado. Resolviendo...\n";
+solve;
+printf "Problema resuelto. Mostrando resultados...\n";
+
+display lambda;
+
+# Escribir los resultados en un archivo de texto
+printf "Resultados del problema dual de la SVM:\n\n" > resultados_svm_dual.txt;
+
+# Guarda el vector lambda
+printf "lambdas = [" >> resultados_svm_dual.txt;
+for {i in 1..m} {
+    printf "%f, ", lambda[i] >> resultados_svm_dual.txt;
+}
+printf "];\n\n" >> resultados_svm_dual.txt;
+
+# Cierra el archivo
+close resultados_svm_dual.txt;
+
+print "Resultados guardados en 'resultados_svm_dual.txt'";

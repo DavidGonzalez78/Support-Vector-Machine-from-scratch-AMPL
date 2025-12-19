@@ -1,0 +1,41 @@
+
+reset; 
+option solver cplex; 
+option cplex_options 'timing=1';
+option cplex_options 'baropt timing=1';
+printf "\nCargando modelo y datos...\n";
+model svm.mod;
+data data_primal_diabetes.dat;
+solve;
+
+
+display w, gamma, s; 
+
+
+
+
+
+# Abre un archivo para escritura
+printf "Resultados de la SVM:\n\n" > resultados_svm.txt;
+
+# Guarda el vector w
+printf "w = [" >> resultados_svm.txt;
+for{j in 1..n} {
+    printf "%f, ", w[j] >> resultados_svm.txt;
+}
+printf "];\n\n" >> resultados_svm.txt;
+
+# Guarda gamma
+printf "gamma = %f;\n\n", gamma >> resultados_svm.txt;
+
+# Guarda el vector s
+printf "s = [" >> resultados_svm.txt;
+for{i in 1..m} {
+    printf "%f, ", s[i] >> resultados_svm.txt;
+}
+printf "];\n" >> resultados_svm.txt;
+
+# Cierra el archivo
+close resultados_svm.txt;
+
+print "Resultados guardados en 'resultados_svm.txt'";
